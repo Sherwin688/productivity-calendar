@@ -1,18 +1,31 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Modal from 'react-bootstrap/Modal';
 import Task from "./Task";
 
 function DateModal({dateModalIsOpen,setDateModalIsOpen,datetasks}) {
-  const testtasks = [
-    {"id":"1",
-  "task":"Do this"},
-  {"id":"2",
-  "task":"Do this2"},
-  {"id":"3",
-  "task":"Do this3"},
-  ]
   const [tasks,setTasks] = useState(datetasks.tasks)
-  console.log(tasks)
+
+
+  const handleCheckboxChange = (id,e)=>{
+    tasks.map((task)=>{
+      if(task.id===id){
+        if(e.target.checked){
+          task.status="complete"
+        }
+        else{
+          task.status="incomplete"
+        }
+      }
+      setTasks(tasks)
+    })
+    // console.log(task.status)
+    // if(e.target.checked){
+    //   task.status="complete"
+    // }
+    // else{
+    //   task.status="incomplete"
+    // }
+  }
   return (
     <>
       <Modal show={dateModalIsOpen} onHide={()=>setDateModalIsOpen(false)}>
@@ -20,7 +33,7 @@ function DateModal({dateModalIsOpen,setDateModalIsOpen,datetasks}) {
           <Modal.Title>Tasks</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        {tasks.map((task)=><Task key={task.id} task={task.task} status={task.status}/>)}
+        {tasks.map((task)=><Task handleCheckboxChange={handleCheckboxChange} key={task.id} id={task.id} task={task.task} status={task.status}/>)}
         </Modal.Body>
        
       </Modal>

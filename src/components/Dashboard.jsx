@@ -10,10 +10,7 @@ function Dashboard() {
   const [dateModalIsOpen,setDateModalIsOpen] = useState(false)
   const [tasks,setTasks] = useState([])
 
-// useEffect(()=>{
-//   let date = formatDate("ne",value);
-//   setTasks(datetasks.filter(datetask=> datetask.date===date)[0])
-// })
+
   const handleDayClick = (val)=>{
     let date = formatDate("ne",val)
     setValue(date);
