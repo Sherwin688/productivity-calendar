@@ -1,3 +1,7 @@
+:root{
+    --background-color:#212529;
+    --foreground-color:#cecece;
+}
 * {
     padding: 0;
     margin: 0;
@@ -10,10 +14,25 @@
     min-height: 100vh;
     box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
     padding: 10px;
+    background-color: var(--background-color);
+    color: var(--foreground-color);
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+    flex-direction: column;
 }
+
 
 .main-content{
     flex-basis: 70%;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
     min-height: 100vh;
+    padding: 10px;
+}
+
+.additional-tasks,.daily-tasks{
     padding: 10px;
 }
