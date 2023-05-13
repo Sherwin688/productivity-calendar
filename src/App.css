@@ -36,3 +36,11 @@
 .additional-tasks,.daily-tasks{
     padding: 10px;
 }
+
+.btn-container{
+    display: flex;
+}
+
+.btn-container button{
+   margin-left: auto;
+}

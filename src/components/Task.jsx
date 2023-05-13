@@ -4,6 +4,9 @@ import InputGroup from 'react-bootstrap/InputGroup';
 function Task({id,task,status,handleCheckboxChange}) {
  
   const [checked,setChecked] = useState(status==="complete"?true:false)
+  const [currentTask,setCurrentTask] = useState(task)
+
+
   return (
     <>
     <InputGroup className="mb-3">
