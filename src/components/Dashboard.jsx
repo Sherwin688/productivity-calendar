@@ -40,9 +40,7 @@ function Dashboard() {
   }
  
   const handleDayClick = (val)=>{
-
     setValue(val);
-
     findTask(val)
     
   }
