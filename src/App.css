@@ -11,8 +11,8 @@
 /* Dashboard Components */
 .sidebar{
     flex-basis: 30%;
-    min-height: 100vh;
-    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
+    /* min-height: 100vh; */
+    /* box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2); */
     padding: 10px;
     background-color: var(--background-color);
     color: var(--foreground-color);
@@ -21,7 +21,10 @@
     /* align-items: center; */
     flex-direction: column;
 }
-
+.App{
+    height: 100vh;
+    background-color: #212529;
+}
 
 .main-content{
     flex-basis: 70%;
@@ -29,8 +32,11 @@
     display: flex;
     justify-content: center;
     /* align-items: center; */
-    min-height: 100vh;
+    /* height: 90vh; */
     padding: 10px;
+}
+.container-fluid{
+    background-color: #212529!important;
 }
 
 .additional-tasks,.daily-tasks{
