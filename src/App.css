@@ -50,3 +50,100 @@
 .btn-container button{
    margin-left: auto;
 }
+
+.dashboard{
+    display: flex;
+    /* gap: 50px; */
+    flex-direction: column;
+    min-height: 90vh;
+    background-color: #212529;
+    width: 80%;
+    margin: auto;
+}
+
+.left,.right{
+    display: flex;
+    flex-basis: 50%;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+
+}
+
+.chart-container{
+}
+
+.dashboard h1{
+    font-size: 30px;
+    text-align: center;
+}
+
+.text-data-container{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: space-around;
+}
+
+.data-group{
+    width: 300px;
+    padding: 30px 20px;
+    background-color: #313539;
+    border-radius: 10px;
+    margin: 35px 0;
+}
+.left{
+    background-color: #313539;
+padding: 30px;
+border-radius: 10px;
+}
+
+.data-value {
+font-size: 40px;
+font-weight: bold;
+
+}
+
+.data-group h3{
+    font-size: 15px;
+    margin: 0;
+}
+
+.row {
+    justify-content: space-between;
+    display: flex;
+    --bs-gutter-x:0!important;
+}
+
+.data-subgroup{
+    display: flex;
+    justify-content: space-between;
+}
+
+.data-right svg{
+    width: 50px;
+    height: 50px;
+}
+
+.data-right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    height: 65px;
+    width: 65px;
+   
+}
+
+.chart-container{
+    min-height: 20px;
+}
+
+.chart-container canvas{ 
+}
+
+.chart-container-line canvas{
+    height: 300px;
+
+}

@@ -1,6 +1,7 @@
 import './App.css';
-import Calendar from "./components/Calendar";
 import Dashboard from "./components/Dashboard";
+// import Calendar from "./components/Calendar";
+import Home from "./components/Home";
 import NavBar from "./components/NavBar";
 import {Routes,Route} from "react-router-dom"
 
@@ -11,7 +12,7 @@ function App() {
      <Routes>
       <Route path="/" element={<Dashboard/>}/>
       <Route path="dashboard" element={<Dashboard/>}/>
-      <Route path="calendar" element={<Calendar/>}/>
+      <Route path="/today" element={<Home/>}/>
      </Routes>
     </div>
   );

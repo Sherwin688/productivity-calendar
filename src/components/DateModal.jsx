@@ -4,7 +4,7 @@ import Task from "./Task";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-function DateModal({dateModalIsOpen,setDateModalIsOpen,datetasks,date,handleCheckboxChange,addAdditionalTask}) {
+function DateModal({date,handleDelete,handleEdit,dateModalIsOpen,setDateModalIsOpen,datetasks,handleCheckboxChange,addAdditionalTask}) {
   const [value,setValue] = useState("")
   const [addModalIsOpen,setAddModalIsOpen] = useState(false)
 
@@ -15,12 +15,14 @@ function DateModal({dateModalIsOpen,setDateModalIsOpen,datetasks,date,handleChec
 
 
   }
-
+// console.log(date)
   return (
     <>
   
-      <Modal show={dateModalIsOpen} onHide={()=>{
-        setDateModalIsOpen(false)}}>
+      <Modal show={dateModalIsOpen} onHide={
+        ()=>{
+          setDateModalIsOpen(false)
+        }}>
         <Modal.Header closeButton>
           <Modal.Title>Daily Tasks</Modal.Title>
         </Modal.Header>
@@ -30,6 +32,10 @@ function DateModal({dateModalIsOpen,setDateModalIsOpen,datetasks,date,handleChec
         datetasks.map((task)=>
         task.taskType==="daily"?
         <Task 
+        date={date}
+        taskType="normal"
+        handleDelete={handleDelete}
+        handleEdit={handleEdit}
         handleCheckboxChange={handleCheckboxChange}
         key={task.id}
         id={task.id}
@@ -45,7 +51,12 @@ function DateModal({dateModalIsOpen,setDateModalIsOpen,datetasks,date,handleChec
         <Modal.Body>
         {datetasks.length>0?
         datetasks.map((task)=>task.taskType==="additional"?
-        <Task handleCheckboxChange={handleCheckboxChange}
+        <Task
+        date={date}
+        taskType="normal"
+        handleDelete={handleDelete}
+        handleEdit={handleEdit}
+        handleCheckboxChange={handleCheckboxChange}
          key={task.id}
          id={task.id}
          task={task.task}

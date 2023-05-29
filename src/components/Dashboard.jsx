@@ -1,152 +1,143 @@
-import React, { useEffect, useState } from 'react'
-import Calendar from 'react-calendar';
-import '../Calendar.css';
-import { formatDate } from "react-calendar/dist/cjs/shared/dateFormatter";
-import DateModal from "./DateModal";
+import React from 'react';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend,CategoryScale,LinearScale, PointElement,LineElement,Title} from 'chart.js';
+import {TbStack3} from "react-icons/tb"
+import { Line } from 'react-chartjs-2'
+import { Pie } from 'react-chartjs-2';
+import {BiError} from "react-icons/bi"
+import {GoChecklist} from "react-icons/go"
+import { useState } from "react";
 import axios from "axios";
-import SideBar from "./SideBar";
-
+import { formatDate } from "react-calendar/dist/cjs/shared/dateFormatter";
 function Dashboard() {
-  const [date, setDate] = useState(new Date());
-  const todaysDate = formatDate("en-GB",new Date())
-  const [dateModalIsOpen,setDateModalIsOpen] = useState(false)
-  const [tasks,setTasks] = useState([])
-  const [todaysTasks,setTodaysTasks] = useState([])
-  const [progress,setProgress] = useState()
-  
 
-useEffect(()=>{
-  getProgressBarPercentage(todaysTasks)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-},[todaysTasks])
+  const [lineChartDataValues,setLineChartDataValues] = useState([100, 300, 500, 600, 700, 800, 200,300,400,100,500,300,100])
+  const [pieChartDataValues,setPieChartDataValues] = useState([2,4])
+  const [totalTasks,setTotalTasks] = useState(0)
+  const [incompleteTasks,setIncompleteTasks] = useState(0)
 
-  useEffect(() => {
-    axios.post("http://localhost:8000/find",
-    {
-      "date":formatDate("en-GB",date)
-    }
-    ).then((response)=>
-    {
-      if(response.data.message==="success")
+  useState(()=>{
+    const todaysDate = formatDate("en-GB",new Date())
+
+    axios.post(`http://localhost:8000/getLineChart`,{date:todaysDate}).then((res)=>{
+      console.log(res.data.dataset)
+      setLineChartDataValues(res.data.dataset)
+      setTotalTasks(res.data.totalTasks)
+      setIncompleteTasks(res.data.incompleteTasks)
+      setPieChartDataValues(res.data.pieChart)
+    })
+  },[])
+  ChartJS.register(ArcElement, Tooltip, Legend,CategoryScale,LinearScale,PointElement,LineElement,Title);
+  const lineChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: true,
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart',
+      },
+    },
+  };
+  const lineChartLabels = ['Jan', 'Feb', 'Mar', 'April', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const lineChartData = {
+    labels:lineChartLabels,
+    datasets: [
       {
-        setTasks(response.data.data.tasks)
-        setTodaysTasks(response.data.data.tasks)
-        getProgressBarPercentage(response.data.data.tasks)
+        label: 'Tasks Completed by Month',
+        data:lineChartDataValues,
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
       }
-        
-
-      else
-        setTasks([])
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const getProgressBarPercentage = (t=tasks)=>{
-    let count = 0;
-    t.forEach(task => {
-      if(task.status==="complete")
-      count++;
-    });
-    let progressBarPercentage = parseFloat((count/(t.length))*100)
-    setProgress(progressBarPercentage)
-  }
-
- 
-  
-  const findTask = (dateClicked)=>{
-    axios.post("http://localhost:8000/find",{
-      "date":dateClicked===""?"":formatDate("en-GB",dateClicked)
-    }).then((response)=>{
-      if(response.data.message==="success")
+    ],
+  };
+  const data = {
+    labels: ['Tasks Completed', 'Tasks Not Completed'],
+    datasets: [
       {
-        setTasks(response.data.data.tasks)
-        // if(response.data.data.date===todaysDate){
-        //   setTodaysTasks(response.data.data.tasks)
-        // }
-      }
-      else
-        setTasks([])
-      setDateModalIsOpen(true)
-    })
-  }
- 
-  const handleDayClick = (dateClicked)=>{
-    setDate(dateClicked);
-    findTask(dateClicked)
-    
-  }
-
-  const updateTask = (date)=>{
-    axios.put("http://localhost:8000/update",{
-      "date":date===""?"":formatDate("en-GB",date),
-      "tasks":tasks
-    }).then((response)=>{
-      if(todaysDate===formatDate("en-GB",date)){
-        console.log("worked")
-       setTodaysTasks(response.data.data.tasks)
-      }
-     setTasks(response.data.data.tasks)
-    })
-  }
-
-   const handleCheckboxChange = (id,e)=>{
-     
-      setTasks( tasks.map((task)=>{
+        label: 'no. of tasks',
+        data: pieChartDataValues,
+        backgroundColor: [
+          '#0072c3',
+          'rgba(255, 99, 132, 1)',
+        ],
+        borderColor:[
+          '#0072c3',
+          'rgba(255, 99, 132,1)',
+        ],
        
-        if(task.id===id){
-          if(e.target.checked){
-            task.status="complete"
-          }
-          else{
-            task.status="incomplete"
-          }
-        }
-        return task
-      }))
-   
-      updateTask(date)
-      
-     
-    }
-    const addAdditionalTask = (date,value)=>{
-      const currentTaskId = (tasks.length<1)?1:parseInt(tasks[tasks.length-1].id)+1
-  
-      axios.put("http://localhost:8000/update",{
-        "date":date==="" ? "" : formatDate("en-GB",date),
-        "tasks":[...tasks,{"id":currentTaskId,"task":value,status:"incomplete","taskType":"additional"}]
-      }).then((response)=>{
-        console.log(response);
-        setTasks(response.data.data.tasks)
-
-        if(date.getDate()===new Date().getDate()){
-          setTodaysTasks(response.data.data.tasks)
-        }
-      })
-    }
+        borderWidth: 1,
+      },
+    ],
+  };
   return (
-    <>
-    <div className="container-fluid d-flex p-0">
-      <div className="sidebar">
-        <SideBar
-        setDateModalIsOpen={setDateModalIsOpen}
-        progress={progress}
-        handleCheckboxChange={handleCheckboxChange}
-        datetasks={todaysTasks}
-        />
-      </div>
-      <div className="main-content">
-        {
-        dateModalIsOpen && 
-        <DateModal
-        addAdditionalTask={addAdditionalTask}
-        handleCheckboxChange={handleCheckboxChange}
-        date={date}
-        datetasks={tasks} 
-        dateModalIsOpen={dateModalIsOpen} 
-        setDateModalIsOpen={setDateModalIsOpen}/>
-        }
-        <Calendar showNeighboringMonth={false} value={date} onClickDay={(val)=>handleDayClick(val)}/></div>
+    <div className="dashboard" style={{color:"white"}}>
+
+<div className="row">
+<div className="data-group">
+  <div className="data-subgroup">
+    <div className="data-left">
+    <h3>Total Tasks Completed</h3>
+            <div className="data-value">
+              {totalTasks}
+            </div>
     </div>
-    </>
+          
+    <div className="data-right" style={{backgroundColor:"#08bdba"}}>
+        <TbStack3/>
+      </div>
+    </div>
+  </div>
+
+
+  <div className="data-group">
+  <div className="data-subgroup">
+    <div className="data-left">
+    <h3>Total Tasks Not Completed</h3>
+            <div className="data-value">
+            {incompleteTasks}
+            </div>
+    </div>
+          
+    <div className="data-right"  style={{backgroundColor:"#a2191f"}}>
+        <BiError />
+      </div>
+    </div>
+  </div>
+
+  <div className="data-group">
+  <div className="data-subgroup">
+    <div className="data-left">
+    <h3>Total Tasks</h3>
+            <div className="data-value">
+            {totalTasks+incompleteTasks}
+            </div>
+    </div>
+          
+    <div className="data-right"  style={{backgroundColor:"#6929c4"}}>
+        <GoChecklist />
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+      <div className="left">
+      <div className="chart-container" >
+<h1>Todays Performance</h1>
+
+<Pie data={data} />
+
+</div>
+
+<div className="chart-container-line" >
+<h1>Monthly Performance</h1>
+<Line options={lineChartOptions} data={lineChartData} />
+
+</div>
+
+      </div>
+    </div>
   )
 }
 

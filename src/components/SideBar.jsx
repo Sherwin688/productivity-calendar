@@ -4,7 +4,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Confetti from "react-confetti";
 import {FcApproval} from "react-icons/fc";
 
-function SideBar({ setDateModalIsOpen, datetasks, handleCheckboxChange, progress }) {
+function SideBar({date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, handleCheckboxChange, progress }) {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -27,7 +27,7 @@ function SideBar({ setDateModalIsOpen, datetasks, handleCheckboxChange, progress
       return () => {
         clearTimeout(timeout);
       };
-    }
+    }// eslint-disable-next-line
   }, [progress]);
 
   return (
@@ -36,7 +36,7 @@ function SideBar({ setDateModalIsOpen, datetasks, handleCheckboxChange, progress
         <Confetti
           confettiSource={{ x:10, y: 200 }}
           width={width}
-          height={height }
+          height={height}
         />
       )}
 
@@ -52,13 +52,21 @@ function SideBar({ setDateModalIsOpen, datetasks, handleCheckboxChange, progress
         </div>
         <h3>Daily Tasks</h3>
         {datetasks.length > 0 ? datetasks.map((task) => task.taskType === "daily" ?
-          <Task handleCheckboxChange={handleCheckboxChange} key={task.id} id={task.id} task={task.task} status={task.status} />
+          <Task 
+          date={date}
+          handleDelete={handleDelete}
+           handleEdit={handleEdit}
+          taskType="todays" handleCheckboxChange={handleCheckboxChange} key={task.id} id={task.id} task={task.task} status={task.status} />
           : "") : "No Tasks for the day"}
       </div>
       <div className="additional-tasks">
         <h3>Additional Tasks</h3>
         {datetasks.length > 0 ? datetasks.map((task) => task.taskType === "additional" ?
-          <Task handleCheckboxChange={handleCheckboxChange} key={task.id} id={task.id} task={task.task} status={task.status} />
+          <Task 
+          date={date}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+          taskType="todays" handleCheckboxChange={handleCheckboxChange} key={task.id} id={task.id} task={task.task} status={task.status} />
           : "") : "No Tasks for the day"}
       </div>
       </>
