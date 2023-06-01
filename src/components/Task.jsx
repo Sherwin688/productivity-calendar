@@ -3,12 +3,20 @@ import React, {   useState } from 'react'
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import {AiFillSave,AiFillDelete,AiOutlineEdit} from "react-icons/ai"
-function Task({date,handleEdit,handleDelete,id,task,status,handleCheckboxChange,taskType="normal"}) {
+function Task({handleDailyDelete,realTaskType,date,handleEdit,handleDelete,id,task,status,handleCheckboxChange,taskType="normal"}) {
   
 const [editable,setEditable] = useState(false)
 const [editValue,setEditValue] = useState(task)
 
 
+const handleTypeDelete = ()=>{
+  if(realTaskType==="daily"){
+    handleDailyDelete(id,"todays")
+  }
+  else if(realTaskType==="additional"){
+    handleDelete(id,taskType)
+  }
+}
 React.useEffect(() => {
   setEditValue(task)
 }, [task])
@@ -34,7 +42,7 @@ React.useEffect(() => {
         </Button>
         :<>
         <Button variant="light" onClick={()=>setEditable(true)}><AiOutlineEdit/></Button>
-        <Button variant="danger" onClick={()=>handleDelete(id,taskType)}><AiFillDelete/></Button>
+        <Button variant="danger" onClick={()=>handleTypeDelete()}><AiFillDelete/></Button>
         </>}
       </InputGroup>
       </>

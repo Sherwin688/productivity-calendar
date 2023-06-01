@@ -8,6 +8,7 @@
   justify-content: space-around;
   flex-direction: column;
   display: flex;
+  padding: 15px;
 }
 .progress-bar{
   transition: all 500ms ;

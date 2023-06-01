@@ -3,12 +3,17 @@ import Task from "./Task";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Confetti from "react-confetti";
 import {FcApproval} from "react-icons/fc";
+import { Button } from "react-bootstrap";
+import DailyTaskModal from "./DailyTaskModal";
 
-function SideBar({date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, handleCheckboxChange, progress }) {
+function SideBar({handleDailyDelete,handleAddDailyTaskClick,date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, handleCheckboxChange, progress }) {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [addDailyTaskIsOpen,setAddDailyTaskIsOpen] = useState(false)
   const ref = useRef(null);
+  const dailyTasks = datetasks.filter((task)=>task.taskType==="daily")
+  const additionalTasks = datetasks.filter((task)=>task.taskType==="additional")
 
   useEffect(() => {
     setHeight(ref.current.clientHeight);
@@ -30,6 +35,9 @@ function SideBar({date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, h
     }// eslint-disable-next-line
   }, [progress]);
 
+ 
+
+  
   return (
     <div ref={ref} style={{height:"100%"}}>
       {showConfetti && (
@@ -51,18 +59,30 @@ function SideBar({date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, h
           <ProgressBar now={progress} label={Math.round(progress) + "%"} />
         </div>
         <h3>Daily Tasks</h3>
-        {datetasks.length > 0 ? datetasks.map((task) => task.taskType === "daily" ?
+        {dailyTasks.length > 0 ? datetasks.map((task) => task.taskType === "daily" ?
           <Task 
+        realTaskType={task.taskType}
+        handleDailyDelete={handleDailyDelete}
           date={date}
           handleDelete={handleDelete}
            handleEdit={handleEdit}
           taskType="todays" handleCheckboxChange={handleCheckboxChange} key={task.id} id={task.id} task={task.task} status={task.status} />
           : "") : "No Tasks for the day"}
+
+        {addDailyTaskIsOpen?<DailyTaskModal 
+        date={new Date()}
+        addDailyTaskIsOpen={addDailyTaskIsOpen}
+        setAddDailyTaskIsOpen={setAddDailyTaskIsOpen}
+        handleAddDailyTaskClick={handleAddDailyTaskClick}
+        />:<Button onClick={()=>setAddDailyTaskIsOpen(true)} variant="primary">Add Daily Task</Button>}
+
       </div>
       <div className="additional-tasks">
         <h3>Additional Tasks</h3>
-        {datetasks.length > 0 ? datetasks.map((task) => task.taskType === "additional" ?
+        {additionalTasks.length > 0 ? datetasks.map((task) => task.taskType === "additional" ?
           <Task 
+        realTaskType={task.taskType}
+        handleDailyDelete={handleDailyDelete}
           date={date}
           handleDelete={handleDelete}
           handleEdit={handleEdit}

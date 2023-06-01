@@ -7,7 +7,6 @@ import {BiError} from "react-icons/bi"
 import {GoChecklist} from "react-icons/go"
 import { useState } from "react";
 import axios from "axios";
-import { formatDate } from "react-calendar/dist/cjs/shared/dateFormatter";
 function Dashboard() {
 
   const [lineChartDataValues,setLineChartDataValues] = useState([100, 300, 500, 600, 700, 800, 200,300,400,100,500,300,100])
@@ -16,12 +15,12 @@ function Dashboard() {
   const [incompleteTasks,setIncompleteTasks] = useState(0)
 
   useState(()=>{
-    const todaysDate = formatDate("en-GB",new Date())
+    const todaysDate = new Date()
 
     axios.post(`http://localhost:8000/getLineChart`,{date:todaysDate}).then((res)=>{
       console.log(res.data.dataset)
       setLineChartDataValues(res.data.dataset)
-      setTotalTasks(res.data.totalTasks)
+      setTotalTasks(res.data.totalCompletedTasks)
       setIncompleteTasks(res.data.incompleteTasks)
       setPieChartDataValues(res.data.pieChart)
     })

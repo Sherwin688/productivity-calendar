@@ -4,10 +4,12 @@ import Task from "./Task";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-function DateModal({date,handleDelete,handleEdit,dateModalIsOpen,setDateModalIsOpen,datetasks,handleCheckboxChange,addAdditionalTask}) {
+function DateModal({handleDailyDelete,date,handleDelete,handleEdit,dateModalIsOpen,setDateModalIsOpen,datetasks,handleCheckboxChange,addAdditionalTask}) {
   const [value,setValue] = useState("")
   const [addModalIsOpen,setAddModalIsOpen] = useState(false)
 
+  const dailyTasks = datetasks.filter((task)=>task.taskType==="daily")
+  const additionalTasks = datetasks.filter((task)=>task.taskType==="additional")
   const handleAddAdditional = ()=>{
     addAdditionalTask(date,value)
     setValue("")
@@ -28,10 +30,12 @@ function DateModal({date,handleDelete,handleEdit,dateModalIsOpen,setDateModalIsO
         </Modal.Header>
         <Modal.Body>
         {
-        datetasks.length>0?
+        dailyTasks.length>0?
         datetasks.map((task)=>
         task.taskType==="daily"?
-        <Task 
+        <Task
+        handleDailyDelete={handleDailyDelete}
+        realTaskType={task.taskType}
         date={date}
         taskType="normal"
         handleDelete={handleDelete}
@@ -43,15 +47,17 @@ function DateModal({date,handleDelete,handleEdit,dateModalIsOpen,setDateModalIsO
         status={task.status}/>
         :
         "")
-        :"No Tasks for the day"}
+        :"No Daily Tasks"}
         </Modal.Body>
         <Modal.Header>
           <Modal.Title>Additional Tasks</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         {datetasks.length>0?
-        datetasks.map((task)=>task.taskType==="additional"?
+        additionalTasks.map((task)=>task.taskType==="additional"?
         <Task
+        handleDailyDelete={handleDailyDelete}
+        realTaskType={task.taskType}
         date={date}
         taskType="normal"
         handleDelete={handleDelete}
@@ -62,7 +68,7 @@ function DateModal({date,handleDelete,handleEdit,dateModalIsOpen,setDateModalIsO
          task={task.task}
          status={task.status}/>
         :"")
-        :"No Tasks for the day"}
+        :"No Additional Tasks for the day"}
         {addModalIsOpen?
         <>
         <Form.Control 
