@@ -1,7 +1,9 @@
+
 :root{
     --background-color:#212529;
     --foreground-color:#cecece;
 }
+html{background-color: #212529;}
 * {
     padding: 0;
     margin: 0;
@@ -92,6 +94,7 @@
     background-color: #313539;
     border-radius: 10px;
     margin: 35px 0;
+    margin-top: 0;
 }
 .left{
     background-color: #313539;
@@ -147,3 +150,56 @@ font-weight: bold;
     height: 300px;
 
 }
+
+
+@media only screen and (max-width: 1000px)  {
+    .container-fluid{
+        flex-direction: column!important;
+    }
+    canvas{
+        width: 100%;
+        min-height:auto;
+    }
+    .data-group,.left{
+        margin: 10px 0;
+    }
+    .row{
+        justify-content: center;
+    }
+    .react-calendar__navigation button{
+        font-size: 14px!important;
+    }
+    .react-calendar__month-view__weekdays__weekday{
+        font-size: 14px!important;
+    }
+    .react-calendar__tile{
+        padding: 18px!important;
+    }
+    .navbar-collapse{
+        width: 100%!important;
+        margin-top: 10px;
+    }
+    .chart-container canvas{
+        width: 200px!important;
+        height: auto!important;
+        margin: auto;
+    }
+   
+}
+
+.active{
+    color: #212529!important;
+    background-color: #cecece;
+    border-radius: 10px;
+
+}
+.nav-link{
+    padding: 5px;
+    font-size: 20px;
+}
+
+.navbar-collapse{
+    flex-basis: 0;
+    flex-grow:0
+}
+

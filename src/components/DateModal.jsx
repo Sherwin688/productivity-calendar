@@ -17,7 +17,6 @@ function DateModal({handleDailyDelete,date,handleDelete,handleEdit,dateModalIsOp
 
 
   }
-// console.log(date)
   return (
     <>
   
@@ -25,8 +24,17 @@ function DateModal({handleDailyDelete,date,handleDelete,handleEdit,dateModalIsOp
         ()=>{
           setDateModalIsOpen(false)
         }}>
-        <Modal.Header closeButton>
-          <Modal.Title>Daily Tasks</Modal.Title>
+        <Modal.Header className="pt-2 pb-2 text-center w-100" closeButton>
+
+          <Modal.Title className="w-100">{date.toLocaleDateString()}</Modal.Title>
+          </Modal.Header>
+
+  
+
+        <Modal.Header >
+          <Modal.Title> <p className="text-center">Daily Tasks</p> 
+  
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
         {
@@ -34,6 +42,7 @@ function DateModal({handleDailyDelete,date,handleDelete,handleEdit,dateModalIsOp
         datetasks.map((task)=>
         task.taskType==="daily"?
         <Task
+        disableButtons="yes"
         handleDailyDelete={handleDailyDelete}
         realTaskType={task.taskType}
         date={date}
@@ -56,6 +65,7 @@ function DateModal({handleDailyDelete,date,handleDelete,handleEdit,dateModalIsOp
         {datetasks.length>0?
         additionalTasks.map((task)=>task.taskType==="additional"?
         <Task
+        disableButtons="no"
         handleDailyDelete={handleDailyDelete}
         realTaskType={task.taskType}
         date={date}

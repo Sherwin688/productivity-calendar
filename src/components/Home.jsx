@@ -4,6 +4,7 @@ import '../Calendar.css';
 import DateModal from "./DateModal";
 import axios from "axios";
 import SideBar from "./SideBar";
+const BASE_URL = process.env.REACT_APP_BASE_URL
 
 function Home() {
   const [date, setDate] = useState(new Date());
@@ -20,7 +21,7 @@ useEffect(()=>{
   // eslint-disable-next-line react-hooks/exhaustive-deps
 },[todaysTasks])
 useEffect(() => {
-  axios.post("http://localhost:8000/find",
+  axios.post(`${BASE_URL}/find`,
   {
     "date":date
   }
@@ -40,10 +41,10 @@ useEffect(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
+
 const handleEdit = (date,id,value,taskType="normal")=>{
-  console.log(date)
   if(taskType==="todays"){
-    axios.put("http://localhost:8000/update",{
+    axios.put(`${BASE_URL}/update`,{
     "date":date===""?"":date,
     "tasks":todaysTasks.map((task)=>{
       if(task.id===id){
@@ -62,7 +63,7 @@ const handleEdit = (date,id,value,taskType="normal")=>{
   })
   }
   else{
-    axios.put("http://localhost:8000/update",{
+    axios.put(`${BASE_URL}/update`,{
       "date":date===""?"":date,
       "tasks":tasks.map((task)=>{
         if(task.id===id){
@@ -75,7 +76,6 @@ const handleEdit = (date,id,value,taskType="normal")=>{
       {
        
         if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
-          console.log("worked")
          setTodaysTasks(response.data.data.tasks)
         }
         setTasks(response.data.data.tasks)
@@ -89,7 +89,7 @@ const handleEdit = (date,id,value,taskType="normal")=>{
 }
 const deleteTask = (date,id,taskType="normal")=>{
   if(taskType==="todays"){
-    axios.put("http://localhost:8000/update",{
+    axios.put(`${BASE_URL}/update`,{
     "date":date===""?"":new Date(),
     "tasks":todaysTasks.filter((task)=>id!==task.id)
   }).then((response)=>{
@@ -104,7 +104,7 @@ const deleteTask = (date,id,taskType="normal")=>{
   })
   }
   else{
-    axios.put("http://localhost:8000/update",{
+    axios.put(`${BASE_URL}/update`,{
       "date":date===""?"":date,
       "tasks":tasks.filter((task)=>id!==task.id)
     }).then((response)=>{
@@ -112,7 +112,6 @@ const deleteTask = (date,id,taskType="normal")=>{
       {
         if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
 
-          console.log("worked")
          setTodaysTasks(response.data.data.tasks)
         }
         setTasks(response.data.data.tasks)
@@ -137,11 +136,10 @@ const getProgressBarPercentage = (t=tasks)=>{
   const addAdditionalTask = (date,value)=>{
     const currentTaskId = (tasks.length<1)?1:parseInt(tasks[tasks.length-1].id)+1
 
-    axios.put("http://localhost:8000/update",{
+    axios.put(`${BASE_URL}/update`,{
       "date":date,
       "tasks":[...tasks,{"id":currentTaskId,"task":value,status:"incomplete","taskType":"additional"}]
     }).then((response)=>{
-      console.log(response);
       setTasks(response.data.data.tasks)
 
       if(date.getDate()===new Date().getDate()){
@@ -151,8 +149,7 @@ const getProgressBarPercentage = (t=tasks)=>{
   }
 const findTask = (dateClicked)=>{
 
-  console.log(dateClicked);
-    axios.post("http://localhost:8000/find",{
+    axios.post(`${BASE_URL}/find`,{
       "date":dateClicked===""?"":dateClicked
     }).then((response)=>{
       if(response.data.message==="success")
@@ -175,24 +172,22 @@ const handleDayClick = (dateClicked)=>{
 const updateTask = (date,taskType="normal")=>{
     if(taskType==="todays")
     {
-      axios.put("http://localhost:8000/update",{
+      axios.put(`${BASE_URL}/update`,{
         "date":new Date(),
         "tasks":todaysTasks
       }).then((response)=>{
          setTodaysTasks(response.data.data.tasks)
          if(todaysDate===date){
-          console.log("worked date")
          setTasks(response.data.data.tasks)
         }
       })
     }
     else{
-      axios.put("http://localhost:8000/update",{
+      axios.put(`${BASE_URL}/update`,{
       "date":date===""?"":date,
       "tasks":tasks
     }).then((response)=>{
       if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
-        console.log(response)
        setTodaysTasks(response.data.data.tasks)
       }
      setTasks(response.data.data.tasks)
@@ -203,11 +198,10 @@ const updateTask = (date,taskType="normal")=>{
 
  const handleAddDailyTaskClick = (date,taskName)=>{
   const currentTaskId = (todaysTasks.length<1)?1:parseInt(todaysTasks[todaysTasks.length-1].id)+1
-    axios.post("http://localhost:8000/addDailyTask",{
+    axios.post(`${BASE_URL}/addDailyTask`,{
       "date":date===""?"":date,
     "task": {"id":currentTaskId,"task":taskName,taskType:"daily",status:"incomplete"}
   }).then((response)=>{
-    console.log(response)
     setTodaysTasks([...todaysTasks,response.data.data])
    
   })
@@ -216,7 +210,6 @@ const updateTask = (date,taskType="normal")=>{
 
 const handleDelete=(id,taskType="normal")=>{
     if(taskType==="todays"){
-      console.log(id)
       setTodaysTasks(todaysTasks.filter((task)=>task.id!==id))
       const today = new Date()
  deleteTask(today,id,"todays")
@@ -271,33 +264,91 @@ else{
       
      
     }
+
+    const handleDailyEdit = (id,value,taskType)=>{
+       todaysTasks.map((task)=>{
+        if(task.id===id){
+          task.task = value
+        }
+        return task
+      })
+      if(taskType==="todays")
+        {
+          axios.put(`${BASE_URL}/updateDailyTask`,
+          {
+            "tasks":todaysTasks.filter((task)=>task.taskType==="daily")
+            }
+          ).then((response)=>{
+            setTodaysTasks(todaysTasks.map((task)=>{
+              if(task.id===id){
+                task.task = value
+              }
+              return task
+            }))
+            if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
+             setTasks(tasks.map((task)=>{
+              if(task.id===id){
+                task.task = value
+              }
+              return task
+            }))
+            }
+          })
+        }
+        else{
+          axios.put(`${BASE_URL}/updateDailyTask`,
+          {
+            "tasks":todaysTasks.filter((task)=>task.taskType==="daily")}
+          ).then((response)=>{
+            setTasks(tasks.map((task)=>{
+              if(task.id===id){
+                task.task = value
+              }
+              return task
+            }))
+            if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
+              setTodaysTasks(todaysTasks.map((task)=>{
+                if(task.id===id){
+                  task.task = value
+                }
+                return task
+              }))
+            }
+          })
+        }
+        
+      
+    }
 const handleDailyDelete = (id,taskType)=>{
-  console.log(id);
-  console.log(taskType);
+
   if(taskType==="todays")
     {
-      axios.put("http://localhost:8000/removeDailyTask",
+      axios.put(`${BASE_URL}/removeDailyTask`,
       {
           "tasks":todaysTasks.filter((task)=>{
          if(task.id!==id && task.taskType!=="additional"){
-          return task
+          return true
           }
+          else
+          return false
       })}
       ).then((response)=>{
-        console.log(response)
+     
         setTodaysTasks(todaysTasks.filter((task)=>task.id!==id))
         if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
-          // console.log("worked date")
          setTasks(tasks.filter((task)=>task.id!==id))
         }
       })
     }
     else{
-      axios.put("http://localhost:8000/removeDailyTask",
+      axios.put(`${BASE_URL}/removeDailyTask`,
       {
         "tasks":tasks.filter((task)=>{
        if(task.id!==id && task.taskType!=="additional"){
-        return task
+        return true
+        }
+        else{
+          return false
         }
     })}
       ).then((response)=>{
@@ -315,6 +366,11 @@ const handleDailyDelete = (id,taskType)=>{
     <div className="container-fluid d-flex p-0">
       <div className="sidebar">
         <SideBar
+        findTask={findTask}
+        tasks={tasks}
+        dateModalIsOpen={dateModalIsOpen}
+        addAdditionalTask={addAdditionalTask}
+        handleDailyEdit={handleDailyEdit}
         handleDailyDelete={handleDailyDelete}
         handleAddDailyTaskClick={handleAddDailyTaskClick}
         date={date}

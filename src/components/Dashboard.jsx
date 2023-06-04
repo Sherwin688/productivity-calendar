@@ -7,22 +7,28 @@ import {BiError} from "react-icons/bi"
 import {GoChecklist} from "react-icons/go"
 import { useState } from "react";
 import axios from "axios";
+import { ProgressBar } from 'react-bootstrap';
+
 function Dashboard() {
 
   const [lineChartDataValues,setLineChartDataValues] = useState([100, 300, 500, 600, 700, 800, 200,300,400,100,500,300,100])
   const [pieChartDataValues,setPieChartDataValues] = useState([2,4])
   const [totalTasks,setTotalTasks] = useState(0)
   const [incompleteTasks,setIncompleteTasks] = useState(0)
-
+  const [percentage,setPercentage] = useState(0)
+  const [month,setMonth] = useState("")
+  const BASE_URL = process.env.REACT_APP_BASE_URL
+console.log(BASE_URL)
   useState(()=>{
     const todaysDate = new Date()
 
-    axios.post(`http://localhost:8000/getLineChart`,{date:todaysDate}).then((res)=>{
-      console.log(res.data.dataset)
+    axios.post(`${BASE_URL}/getLineChart`,{date:todaysDate}).then((res)=>{
       setLineChartDataValues(res.data.dataset)
       setTotalTasks(res.data.totalCompletedTasks)
       setIncompleteTasks(res.data.incompleteTasks)
       setPieChartDataValues(res.data.pieChart)
+      setPercentage(res.data.monthlyResult.percentage)
+      setMonth(res.data.monthlyResult.month)
     })
   },[])
   ChartJS.register(ArcElement, Tooltip, Legend,CategoryScale,LinearScale,PointElement,LineElement,Title);
@@ -32,7 +38,7 @@ function Dashboard() {
       legend: true,
       title: {
         display: true,
-        text: 'Chart.js Line Chart',
+  
       },
     },
   };
@@ -67,6 +73,30 @@ function Dashboard() {
       },
     ],
   };
+
+  const getPercentageLabel = ()=>{
+    if(percentage>=70){
+      return ("Great Performance!")
+    }
+    else if(percentage>=40 && percentage<70){
+      return ("Good Performance")
+    }
+    else if(percentage<40){
+      return ("Poor Performance")
+    }
+  }
+  const getLabelColor= ()=>{
+    if(percentage>=70){
+      return ("success")
+    }
+    else if(percentage>=40 && percentage<70){
+      return ("warning")
+    }
+    else if(percentage<40){
+      return ("danger")
+    }
+  }
+
   return (
     <div className="dashboard" style={{color:"white"}}>
 
@@ -117,6 +147,20 @@ function Dashboard() {
     </div>
   </div>
 
+  <div className="data-group">
+    <div className="data-left">
+    <h3>{month} Progress</h3>
+            <ProgressBar style={{height:30}} className="mt-2" now={percentage} variant={getLabelColor()} label={percentage+"%"} />
+            <div className="data-value mt-2" style={{fontSize:"16px"}}>
+            {getPercentageLabel()}
+            </div>
+    </div>
+          
+    {/* <div className="data-right"  style={{backgroundColor:"#6929c4"}}>
+        <GoChecklist />
+      </div> */}
+  </div>
+
 
 
 
@@ -124,8 +168,8 @@ function Dashboard() {
       <div className="left">
       <div className="chart-container" >
 <h1>Todays Performance</h1>
-
 <Pie data={data} />
+<h5 className="text-center">{pieChartDataValues[0]}/{pieChartDataValues[1]+pieChartDataValues[0]} tasks completed</h5>
 
 </div>
 

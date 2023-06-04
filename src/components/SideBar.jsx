@@ -6,7 +6,7 @@ import {FcApproval} from "react-icons/fc";
 import { Button } from "react-bootstrap";
 import DailyTaskModal from "./DailyTaskModal";
 
-function SideBar({handleDailyDelete,handleAddDailyTaskClick,date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, handleCheckboxChange, progress }) {
+function SideBar({handleDailyEdit,handleDailyDelete,handleAddDailyTaskClick,date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, handleCheckboxChange, progress }) {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -61,6 +61,9 @@ function SideBar({handleDailyDelete,handleAddDailyTaskClick,date,handleDelete,ha
         <h3>Daily Tasks</h3>
         {dailyTasks.length > 0 ? datetasks.map((task) => task.taskType === "daily" ?
           <Task 
+          handleDailyEdit={handleDailyEdit}
+          enableDailyDelete={true}
+          disableButtons="no"
         realTaskType={task.taskType}
         handleDailyDelete={handleDailyDelete}
           date={date}
@@ -81,13 +84,14 @@ function SideBar({handleDailyDelete,handleAddDailyTaskClick,date,handleDelete,ha
         <h3>Additional Tasks</h3>
         {additionalTasks.length > 0 ? datetasks.map((task) => task.taskType === "additional" ?
           <Task 
+          disableButtons="no"
         realTaskType={task.taskType}
         handleDailyDelete={handleDailyDelete}
           date={date}
           handleDelete={handleDelete}
           handleEdit={handleEdit}
           taskType="todays" handleCheckboxChange={handleCheckboxChange} key={task.id} id={task.id} task={task.task} status={task.status} />
-          : "") : "No Tasks for the day"}
+          : "") :(<><p>No tasks left</p><Button onClick={()=>setDateModalIsOpen(true)}>Add more tasks</Button></>)}
       </div>
       </>
 }
