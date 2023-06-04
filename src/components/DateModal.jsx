@@ -37,6 +37,7 @@ function DateModal({handleDailyDelete,date,handleDelete,handleEdit,dateModalIsOp
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+       
         {
         dailyTasks.length>0?
         datetasks.map((task)=>
@@ -57,6 +58,7 @@ function DateModal({handleDailyDelete,date,handleDelete,handleEdit,dateModalIsOp
         :
         "")
         :"No Daily Tasks"}
+
         </Modal.Body>
         <Modal.Header>
           <Modal.Title>Additional Tasks</Modal.Title>

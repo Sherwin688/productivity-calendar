@@ -18,9 +18,11 @@ function Dashboard() {
   const [incompleteTasks,setIncompleteTasks] = useState(0)
   const [percentage,setPercentage] = useState(0)
   const [month,setMonth] = useState("")
+  const [spinner, setSpinner] = useState(false);    
 
 
   useState(()=>{
+    setSpinner(true)
     const todaysDate = new Date()
 
     axios.post(`${BASE_URL}/getLineChart`,{date:todaysDate}).then((res)=>{
@@ -30,6 +32,8 @@ function Dashboard() {
       setPieChartDataValues(res.data.pieChart)
       setPercentage(res.data.monthlyResult.percentage)
       setMonth(res.data.monthlyResult.month)
+    setSpinner(false)
+
     })
   },[])
   ChartJS.register(ArcElement, Tooltip, Legend,CategoryScale,LinearScale,PointElement,LineElement,Title);
@@ -99,15 +103,15 @@ function Dashboard() {
   }
 
   return (
-    <div className="dashboard" style={{color:"white"}}>
-
+    <>
+      <div className="dashboard" style={{color:"white"}}>
 <div className="row">
 <div className="data-group">
   <div className="data-subgroup">
     <div className="data-left">
     <h3>Total Tasks Completed</h3>
             <div className="data-value">
-              {totalTasks}
+              {spinner?<div className="spinner"/>:totalTasks}
             </div>
     </div>
           
@@ -123,7 +127,7 @@ function Dashboard() {
     <div className="data-left">
     <h3>Total Tasks Not Completed</h3>
             <div className="data-value">
-            {incompleteTasks}
+            {spinner?<div className="spinner"/>:incompleteTasks}
             </div>
     </div>
           
@@ -138,7 +142,8 @@ function Dashboard() {
     <div className="data-left">
     <h3>Total Tasks</h3>
             <div className="data-value">
-            {totalTasks+incompleteTasks}
+            {spinner?<div className="spinner"/>:totalTasks+incompleteTasks}
+
             </div>
     </div>
           
@@ -150,11 +155,12 @@ function Dashboard() {
 
   <div className="data-group">
     <div className="data-left">
-    <h3>{month} Progress</h3>
-            <ProgressBar style={{height:30}} className="mt-2" now={percentage} variant={getLabelColor()} label={percentage+"%"} />
-            <div className="data-value mt-2" style={{fontSize:"16px"}}>
-            {getPercentageLabel()}
-            </div>
+    {spinner?<div className="spinner"/>:(<><h3>{month} Progress</h3>
+<ProgressBar style={{height:30}} className="mt-2" now={percentage} variant={getLabelColor()} label={percentage+"%"} />
+<div className="data-value mt-2" style={{fontSize:"16px"}}>
+{getPercentageLabel()}
+</div></>)}
+    
     </div>
           
     {/* <div className="data-right"  style={{backgroundColor:"#6929c4"}}>
@@ -182,6 +188,8 @@ function Dashboard() {
 
       </div>
     </div>
+    
+   </>
   )
 }
 

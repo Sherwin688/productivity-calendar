@@ -14,14 +14,21 @@ function Home() {
   const [tasks,setTasks] = useState([])
   const [todaysTasks,setTodaysTasks] = useState([])
   const [progress,setProgress] = useState()
+  const [spinner, setSpinner] = useState(false);    
+
   
   
 
 useEffect(()=>{
+  setSpinner(true)
   getProgressBarPercentage(todaysTasks)
+  setSpinner(false)
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
 },[todaysTasks])
 useEffect(() => {
+  setSpinner(true)
+  
   axios.post(`${BASE_URL}/find`,
   {
     "date":date
@@ -38,12 +45,16 @@ useEffect(() => {
 
     else
       setTasks([])
+  setSpinner(false)
+    
   })
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
 
 const handleEdit = (date,id,value,taskType="normal")=>{
+  setSpinner(true)
+
   if(taskType==="todays"){
     axios.put(`${BASE_URL}/update`,{
     "date":date===""?"":date,
@@ -61,6 +72,8 @@ const handleEdit = (date,id,value,taskType="normal")=>{
     }
     else
       setTasks([])
+  setSpinner(false)
+
   })
   }
   else{
@@ -85,10 +98,14 @@ const handleEdit = (date,id,value,taskType="normal")=>{
       else
       setTasks([])
       setDateModalIsOpen(true)
+  setSpinner(false)
+      
   })
 }
 }
 const deleteTask = (date,id,taskType="normal")=>{
+  setSpinner(true)
+
   if(taskType==="todays"){
     axios.put(`${BASE_URL}/update`,{
     "date":date===""?"":new Date(),
@@ -101,10 +118,14 @@ const deleteTask = (date,id,taskType="normal")=>{
     }
     else
       setTasks([])
+
+  setSpinner(false)
+
     // setDateModalIsOpen(true)
   })
   }
   else{
+    
     axios.put(`${BASE_URL}/update`,{
       "date":date===""?"":date,
       "tasks":tasks.filter((task)=>id!==task.id)
@@ -121,11 +142,15 @@ const deleteTask = (date,id,taskType="normal")=>{
       else
       setTasks([])
       setDateModalIsOpen(true)
+  setSpinner(false)
+
   })
 }
 }
 
 const getProgressBarPercentage = (t=tasks)=>{
+  setSpinner(true)
+
     let count = 0;
     t.forEach(task => {
       if(task.status==="complete")
@@ -146,9 +171,12 @@ const getProgressBarPercentage = (t=tasks)=>{
       if(date.getDate()===new Date().getDate()){
         setTodaysTasks(response.data.data.tasks)
       }
+  setSpinner(false)
+
     })
   }
 const findTask = (dateClicked)=>{
+  setSpinner(true)
 
     axios.post(`${BASE_URL}/find`,{
       "date":dateClicked===""?"":dateClicked
@@ -161,6 +189,8 @@ const findTask = (dateClicked)=>{
       else
         setTasks([])
       setDateModalIsOpen(true)
+  setSpinner(false)
+
     })
   }
  
@@ -171,6 +201,8 @@ const handleDayClick = (dateClicked)=>{
   }
 
 const updateTask = (date,taskType="normal")=>{
+  setSpinner(true)
+
     if(taskType==="todays")
     {
       axios.put(`${BASE_URL}/update`,{
@@ -181,6 +213,8 @@ const updateTask = (date,taskType="normal")=>{
          if(todaysDate===date){
          setTasks(response.data.data.tasks)
         }
+  setSpinner(false)
+
       })
     }
     else{
@@ -192,34 +226,43 @@ const updateTask = (date,taskType="normal")=>{
        setTodaysTasks(response.data.data.tasks)
       }
      setTasks(response.data.data.tasks)
+  setSpinner(false)
+
     })
     }
     
   }
 
  const handleAddDailyTaskClick = (date,taskName)=>{
+  setSpinner(true)
+
   const currentTaskId = (todaysTasks.length<1)?1:parseInt(todaysTasks[todaysTasks.length-1].id)+1
     axios.post(`${BASE_URL}/addDailyTask`,{
       "date":date===""?"":date,
     "task": {"id":currentTaskId,"task":taskName,taskType:"daily",status:"incomplete"}
   }).then((response)=>{
     setTodaysTasks([...todaysTasks,response.data.data])
+  setSpinner(false)
    
   })
 }
 
 
 const handleDelete=(id,taskType="normal")=>{
+  setSpinner(true)
+
     if(taskType==="todays"){
       setTodaysTasks(todaysTasks.filter((task)=>task.id!==id))
       const today = new Date()
  deleteTask(today,id,"todays")
+ setSpinner(false)
 
     }
   
 else{
   setTasks(tasks.filter((task)=>task.id!==id))
    deleteTask(date,id)
+   setSpinner(false)
 
 }
 
@@ -267,6 +310,8 @@ else{
     }
 
     const handleDailyEdit = (id,value,taskType)=>{
+  setSpinner(true)
+
        todaysTasks.map((task)=>{
         if(task.id===id){
           task.task = value
@@ -294,6 +339,8 @@ else{
               return task
             }))
             }
+  setSpinner(false)
+
           })
         }
         else{
@@ -315,12 +362,15 @@ else{
                 return task
               }))
             }
+  setSpinner(false)
+
           })
         }
         
       
     }
 const handleDailyDelete = (id,taskType)=>{
+  setSpinner(true)
 
   if(taskType==="todays")
     {
@@ -339,6 +389,8 @@ const handleDailyDelete = (id,taskType)=>{
         if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
          setTasks(tasks.filter((task)=>task.id!==id))
         }
+  setSpinner(false)
+
       })
     }
     else{
@@ -357,16 +409,24 @@ const handleDailyDelete = (id,taskType)=>{
         if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
           setTodaysTasks(todaysTasks.filter((task)=>task.id!==id))
         }
+  setSpinner(false)
+
       })
     }
     
   
 }
   return (
+    
+   
     <>
+     {spinner?<div className="loader-container">
+      <div className="spinner"></div>
+    </div>:
     <div className="container-fluid d-flex p-0">
       <div className="sidebar">
         <SideBar
+        spinner={spinner}
         findTask={findTask}
         tasks={tasks}
         dateModalIsOpen={dateModalIsOpen}
@@ -387,6 +447,7 @@ const handleDailyDelete = (id,taskType)=>{
         {
         dateModalIsOpen && 
         <DateModal
+        spinner={spinner}
         handleDailyDelete={handleDailyDelete}
         findTask={findTask}
         addAdditionalTask={addAdditionalTask}
@@ -400,7 +461,7 @@ const handleDailyDelete = (id,taskType)=>{
         
         }
         <Calendar showNeighboringMonth={false} value={date} onClickDay={(val)=>handleDayClick(val)}/></div>
-    </div>
+    </div>}
     </>
   )
 }

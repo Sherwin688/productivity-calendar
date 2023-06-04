@@ -6,7 +6,7 @@ import {FcApproval} from "react-icons/fc";
 import { Button } from "react-bootstrap";
 import DailyTaskModal from "./DailyTaskModal";
 
-function SideBar({handleDailyEdit,handleDailyDelete,handleAddDailyTaskClick,date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, handleCheckboxChange, progress }) {
+function SideBar({spinner,handleDailyEdit,handleDailyDelete,handleAddDailyTaskClick,date,handleDelete,handleEdit, setDateModalIsOpen, datetasks, handleCheckboxChange, progress }) {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -52,6 +52,7 @@ function SideBar({handleDailyEdit,handleDailyDelete,handleAddDailyTaskClick,date
           All Tasks Completed
           <FcApproval style={{height:100,width:200}} />
         </div>:
+      
         <>
       <div className="daily-tasks" >
         <h3>Progress</h3>
@@ -59,6 +60,7 @@ function SideBar({handleDailyEdit,handleDailyDelete,handleAddDailyTaskClick,date
           <ProgressBar now={progress} label={Math.round(progress) + "%"} />
         </div>
         <h3>Daily Tasks</h3>
+        
         {dailyTasks.length > 0 ? datetasks.map((task) => task.taskType === "daily" ?
           <Task 
           handleDailyEdit={handleDailyEdit}
