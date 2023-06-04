@@ -46,6 +46,7 @@ useEffect(() => {
     else
       setTasks([])
   setSpinner(false)
+  setDateModalIsOpen(true)
     
   })
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,12 +185,13 @@ const findTask = (dateClicked)=>{
       if(response.data.message==="success")
       {
         setTasks(response.data.data.tasks)
+        setDateModalIsOpen(true)
 
       }
       else
         setTasks([])
-        setSpinner(false)
-        setDateModalIsOpen(true)
+      setSpinner(false)
+      setDateModalIsOpen(true)
 
     })
   }
