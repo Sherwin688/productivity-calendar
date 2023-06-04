@@ -22,7 +22,7 @@ function SideBar({spinner,handleDailyEdit,handleDailyDelete,handleAddDailyTaskCl
 
   useEffect(() => {
     if (progress === 100) {
-      setDateModalIsOpen(false)
+      // setDateModalIsOpen(false)
       setShowConfetti(true);
 
       const timeout = setTimeout(() => {
