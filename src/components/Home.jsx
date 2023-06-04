@@ -31,7 +31,7 @@ useEffect(() => {
   
   axios.post(`${BASE_URL}/find`,
   {
-    "date":date
+    "date":new Date(date).setHours(0,0,0,0)
   }
   ).then((response)=>
   {
