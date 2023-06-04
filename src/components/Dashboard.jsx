@@ -155,7 +155,8 @@ function Dashboard() {
 
   <div className="data-group">
     <div className="data-left">
-    {spinner?<div className="spinner"/>:(<><h3>{month} Progress</h3>
+    <h3>{month} Progress</h3>
+    {spinner?<div className="spinner"/>:(<>
 <ProgressBar style={{height:30}} className="mt-2" now={percentage} variant={getLabelColor()} label={percentage+"%"} />
 <div className="data-value mt-2" style={{fontSize:"16px"}}>
 {getPercentageLabel()}
