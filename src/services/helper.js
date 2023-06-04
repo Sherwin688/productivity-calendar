@@ -1,0 +1,1 @@
+export const BASE_URL = "https://productivity-calendar-backend.onrender.com" 

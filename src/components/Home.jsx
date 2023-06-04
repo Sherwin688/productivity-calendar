@@ -4,7 +4,8 @@ import '../Calendar.css';
 import DateModal from "./DateModal";
 import axios from "axios";
 import SideBar from "./SideBar";
-const BASE_URL = process.env.REACT_APP_BASE_URL
+// const BASE_URL = process.env.REACT_APP_BASE_URL
+import {BASE_URL} from "../services/helper"
 
 function Home() {
   const [date, setDate] = useState(new Date());
