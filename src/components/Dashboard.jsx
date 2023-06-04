@@ -8,6 +8,7 @@ import {GoChecklist} from "react-icons/go"
 import { useState } from "react";
 import axios from "axios";
 import { ProgressBar } from 'react-bootstrap';
+import {BASE_URL} from "../services/helper"
 
 function Dashboard() {
 
@@ -17,8 +18,8 @@ function Dashboard() {
   const [incompleteTasks,setIncompleteTasks] = useState(0)
   const [percentage,setPercentage] = useState(0)
   const [month,setMonth] = useState("")
-  const BASE_URL = process.env.REACT_APP_BASE_URL
-console.log(BASE_URL)
+
+
   useState(()=>{
     const todaysDate = new Date()
 
