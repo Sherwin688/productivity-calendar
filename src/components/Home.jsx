@@ -57,7 +57,7 @@ const handleEdit = (date,id,value,taskType="normal")=>{
 
   if(taskType==="todays"){
     axios.put(`${BASE_URL}/update`,{
-    "date":date===""?"":date,
+    "date":new Date(date).setHours(0,0,0,0)===""?"":new Date(date).setHours(0,0,0,0),
     "tasks":todaysTasks.map((task)=>{
       if(task.id===id){
         task.task = value
@@ -78,7 +78,7 @@ const handleEdit = (date,id,value,taskType="normal")=>{
   }
   else{
     axios.put(`${BASE_URL}/update`,{
-      "date":date===""?"":date,
+      "date":new Date(date).setHours(0,0,0,0)===""?"":new Date(date).setHours(0,0,0,0),
       "tasks":tasks.map((task)=>{
         if(task.id===id){
           task.task=value
@@ -108,7 +108,7 @@ const deleteTask = (date,id,taskType="normal")=>{
 
   if(taskType==="todays"){
     axios.put(`${BASE_URL}/update`,{
-    "date":date===""?"":new Date(),
+    "date":new Date(date).setHours(0,0,0,0)===""?"":new Date(date).setHours(0,0,0,0),
     "tasks":todaysTasks.filter((task)=>id!==task.id)
   }).then((response)=>{
     if(response.data.message==="success")
@@ -127,7 +127,7 @@ const deleteTask = (date,id,taskType="normal")=>{
   else{
     
     axios.put(`${BASE_URL}/update`,{
-      "date":date===""?"":date,
+      "date":new Date(date).setHours(0,0,0,0)===""?"":new Date(date).setHours(0,0,0,0),
       "tasks":tasks.filter((task)=>id!==task.id)
     }).then((response)=>{
       if(response.data.message==="success")
@@ -163,7 +163,7 @@ const getProgressBarPercentage = (t=tasks)=>{
     const currentTaskId = (tasks.length<1)?1:parseInt(tasks[tasks.length-1].id)+1
 
     axios.put(`${BASE_URL}/update`,{
-      "date":date,
+      "date":new Date(date).setHours(0,0,0,0),
       "tasks":[...tasks,{"id":currentTaskId,"task":value,status:"incomplete","taskType":"additional"}]
     }).then((response)=>{
       setTasks(response.data.data.tasks)
@@ -206,7 +206,7 @@ const updateTask = (date,taskType="normal")=>{
     if(taskType==="todays")
     {
       axios.put(`${BASE_URL}/update`,{
-        "date":new Date(),
+        "date":new Date(date).setHours(0,0,0,0),
         "tasks":todaysTasks
       }).then((response)=>{
          setTodaysTasks(response.data.data.tasks)
@@ -219,7 +219,7 @@ const updateTask = (date,taskType="normal")=>{
     }
     else{
       axios.put(`${BASE_URL}/update`,{
-      "date":date===""?"":date,
+      "date":new Date(date).setHours(0,0,0,0)===""?"":new Date(date).setHours(0,0,0,0),
       "tasks":tasks
     }).then((response)=>{
       if(todaysDate.toLocaleDateString()===date.toLocaleDateString()){
@@ -238,7 +238,7 @@ const updateTask = (date,taskType="normal")=>{
 
   const currentTaskId = (todaysTasks.length<1)?1:parseInt(todaysTasks[todaysTasks.length-1].id)+1
     axios.post(`${BASE_URL}/addDailyTask`,{
-      "date":date===""?"":date,
+      "date":date===""?"":new Date(date).setHours(0,0,0,0),
     "task": {"id":currentTaskId,"task":taskName,taskType:"daily",status:"incomplete"}
   }).then((response)=>{
     setTodaysTasks([...todaysTasks,response.data.data])
@@ -322,6 +322,7 @@ else{
         {
           axios.put(`${BASE_URL}/updateDailyTask`,
           {
+            "date":new Date().setHours(0,0,0,0),
             "tasks":todaysTasks.filter((task)=>task.taskType==="daily")
             }
           ).then((response)=>{
@@ -376,6 +377,7 @@ const handleDailyDelete = (id,taskType)=>{
     {
       axios.put(`${BASE_URL}/removeDailyTask`,
       {
+        "date":new Date().setHours(0,0,0,0),
           "tasks":todaysTasks.filter((task)=>{
          if(task.id!==id && task.taskType!=="additional"){
           return true
