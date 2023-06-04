@@ -188,8 +188,8 @@ const findTask = (dateClicked)=>{
       }
       else
         setTasks([])
-      setDateModalIsOpen(true)
-  setSpinner(false)
+        setSpinner(false)
+        setDateModalIsOpen(true)
 
     })
   }
