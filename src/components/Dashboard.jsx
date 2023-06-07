@@ -23,9 +23,8 @@ function Dashboard() {
 
   useState(()=>{
     setSpinner(true)
-    const todaysDate = new Date()
 
-    axios.post(`${BASE_URL}/getLineChart`,{date:todaysDate}).then((res)=>{
+    axios.post(`${BASE_URL}/getLineChart`,{date:new Date().setHours(0,0,0,0)}).then((res)=>{
       setLineChartDataValues(res.data.dataset)
       setTotalTasks(res.data.totalCompletedTasks)
       setIncompleteTasks(res.data.incompleteTasks)
