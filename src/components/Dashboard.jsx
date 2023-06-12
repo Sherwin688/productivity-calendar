@@ -9,6 +9,7 @@ import { useState } from "react";
 import axios from "axios";
 import { ProgressBar } from 'react-bootstrap';
 import {BASE_URL} from "../services/helper"
+import moment from "moment";
 
 function Dashboard() {
 
@@ -23,8 +24,9 @@ function Dashboard() {
 
   useState(()=>{
     setSpinner(true)
-
-    axios.post(`${BASE_URL}/getLineChart`,{date:new Date().setHours(0,0,0,0)}).then((res)=>{
+    const now = moment(new Date());
+    const findalDate = now.startOf('day').toISOString();
+    axios.post(`${BASE_URL}/getLineChart`,{date:findalDate}).then((res)=>{
       setLineChartDataValues(res.data.dataset)
       setTotalTasks(res.data.totalCompletedTasks)
       setIncompleteTasks(res.data.incompleteTasks)

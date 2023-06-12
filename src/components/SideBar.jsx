@@ -36,7 +36,7 @@ function SideBar({spinner,handleDailyEdit,handleDailyDelete,handleAddDailyTaskCl
   }, [progress]);
 
  
-
+ 
   
   return (
     <div ref={ref} style={{height:"100%"}}>
@@ -93,7 +93,7 @@ function SideBar({spinner,handleDailyEdit,handleDailyDelete,handleAddDailyTaskCl
           handleDelete={handleDelete}
           handleEdit={handleEdit}
           taskType="todays" handleCheckboxChange={handleCheckboxChange} key={task.id} id={task.id} task={task.task} status={task.status} />
-          : "") :(<><p>No tasks left</p><Button onClick={()=>setDateModalIsOpen(true)}>Add more tasks</Button></>)}
+          : "") :(<><p>No tasks left</p></>)}
       </div>
       </>
 }

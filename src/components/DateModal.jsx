@@ -26,7 +26,7 @@ function DateModal({handleDailyDelete,date,handleDelete,handleEdit,dateModalIsOp
         }}>
         <Modal.Header className="pt-2 pb-2 text-center w-100" closeButton>
 
-          <Modal.Title className="w-100">{date.toLocaleDateString()}</Modal.Title>
+          <Modal.Title className="w-100">{"date"}</Modal.Title>
           </Modal.Header>
 
   
